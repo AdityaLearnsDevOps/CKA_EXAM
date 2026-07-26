@@ -1,7 +1,16 @@
+This will be a Multi-Node setup.
+We are creating the following:
+    Control Node - 1
+    Worker Node(s) - 2
+
 Commands to bootup k8s-clust instances via AWS CloudFormation:
 
 1. Cluster network:
     ./run_aws_cfm.sh c -t network/CreateVPC_PublicSubnet.yaml -n k8s-clust-net
 
-2. Cluster Control Plane:
+2. Cluster Control Node:
     ./run_aws_cfm.sh c -t instances/CreateEC2Inst_EBSVol_KeyPair-NoS3.yaml -n k8s-clust-mast-01
+
+3. Cluster Worker Node:
+    ./run_aws_cfm.sh c -t instances/CreateEC2Inst_EBSVol_KeyPair-NoS3.yaml -n k8s-clust-work-01
+    ./run_aws_cfm.sh c -t instances/CreateEC2Inst_EBSVol_KeyPair-NoS3.yaml -n k8s-clust-work-02

@@ -14,4 +14,4 @@ Kubernetes cluster setup using 'kubeadm':
 		kubeadm join
 		(provide the token & hash received during the 'kubeadm init' command)
 
-kubeadm 
+kubeadm requirements:
