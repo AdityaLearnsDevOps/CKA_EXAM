@@ -1,0 +1,7 @@
+Commands to bootup k8s-clust instances via AWS CloudFormation:
+
+1. Cluster network:
+    ./run_aws_cfm.sh c -t network/CreateVPC_PublicSubnet.yaml -n k8s-clust-net
+
+2. Cluster Control Plane:
+    ./run_aws_cfm.sh c -t instances/CreateEC2Inst_EBSVol_KeyPair-NoS3.yaml -n k8s-clust-mast-01
