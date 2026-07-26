@@ -5,6 +5,8 @@ We are creating the following:
 
 Commands to bootup k8s-clust instances via AWS CloudFormation:
 
+*Follow the same order*  
+
 1. Cluster network:
     ./run_aws_cfm.sh c -t network/CreateVPC_PublicSubnet.yaml -n k8s-clust-net
 
@@ -12,5 +14,19 @@ Commands to bootup k8s-clust instances via AWS CloudFormation:
     ./run_aws_cfm.sh c -t instances/CreateEC2Inst_EBSVol_KeyPair-NoS3.yaml -n k8s-clust-mast-01
 
 3. Cluster Worker Node:
-    ./run_aws_cfm.sh c -t instances/CreateEC2Inst_EBSVol_KeyPair-NoS3.yaml -n k8s-clust-work-01
-    ./run_aws_cfm.sh c -t instances/CreateEC2Inst_EBSVol_KeyPair-NoS3.yaml -n k8s-clust-work-02
+    ./run_aws_cfm.sh c -t instances/CreateEC2Inst_EBSVol_KeyPair-Worker.yaml -n k8s-clust-work-01
+    ./run_aws_cfm.sh c -t instances/CreateEC2Inst_EBSVol_KeyPair-Worker.yaml -n k8s-clust-work-02
+
+To destroy resources :
+
+*Follow the same order* 
+
+1. Cluster Worker Node:
+    ./run_aws_cfm.sh d -n k8s-clust-work-01
+    ./run_aws_cfm.sh d -n k8s-clust-work-02
+2. Cluster Control Node:
+    ./run_aws_cfm.sh d -n k8s-clust-mast-01
+3. Cluster network:
+    ./run_aws_cfm.sh d -n k8s-clust-net
+
+

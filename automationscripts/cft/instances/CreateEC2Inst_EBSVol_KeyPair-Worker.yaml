@@ -38,7 +38,7 @@ Resources:
             - AssociatePublicIpAddress: true   ## As of Mar 2026, Public address can only be assigned via CloudFormation script if DeviceIndex = 0 & we are creating a new Network interface (VPC and PublicSubnet)
               DeviceIndex: "0"
               GroupSet:
-              - Fn::ImportValue: ControlPlaneSGId
+              - Fn::ImportValue: DataPlaneSGId
               SubnetId:
                 Fn::ImportValue: TrimDice-SubnetId
             Tags:

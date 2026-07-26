@@ -1,4 +1,4 @@
-Kubernetes cluster setup using 'kubeadm':
+Kubernetes cluster setup using `kubeadm`:
 
 1. Setting up Control Plane
 	- Run below command to initialize the control plane.
@@ -14,4 +14,9 @@ Kubernetes cluster setup using 'kubeadm':
 		kubeadm join
 		(provide the token & hash received during the 'kubeadm init' command)
 
-kubeadm requirements:
+`kubeadm` requirements:
+
+1. Open certain ports:
+    - Refer Doc: https://kubernetes.io/docs/reference/networking/ports-and-protocols/
+
+2. 

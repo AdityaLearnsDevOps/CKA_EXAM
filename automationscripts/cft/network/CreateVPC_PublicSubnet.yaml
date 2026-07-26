@@ -20,43 +20,108 @@ Resources:
           - Key: Name
             Value: TrimDicePubSubnet
     
-    # Defined a security group having allowing all EGress and only SSH (Port 22) and ICMP (Port 8) Ingress
-    TrimDicePublicSG:
+    # Defined a security group for Kubernetes Control Plane 
+    ControlPlaneSG:
         Type: AWS::EC2::SecurityGroup
         Properties:
           VpcId:
             Ref: TrimDiceVPC
-          GroupName: TrimDicePublicSG
-          GroupDescription: "Security group to associate with TrimDicePublicSubnet"
+          GroupName: ControlPlaneSG
+          GroupDescription: "Security group for Control Plane to associate with TrimDicePublicSubnet"
           SecurityGroupEgress:
             - IpProtocol: -1
               CidrIp: "0.0.0.0/0"
           SecurityGroupIngress:
+          # Standard SSH login access:
             - IpProtocol: tcp
               FromPort: 22
               ToPort: 22
               CidrIp: "0.0.0.0/0"
+              Description: "Standard SSH login access"
+          # Ping access:
             - IpProtocol: icmp
               FromPort: 8
               ToPort: -1
               CidrIp: "0.0.0.0/0"
-                
-    # To be able to self-reference a security group within its own Ingress Rule as a source, we create below rule seperately 
-    TrimDicePublicSGIngressRule:
-        Type: AWS::EC2::SecurityGroupIngress
+              Description: "Ping Access"
+          # Access to Kubernetes API server within the VPC only 
+            - IpProtocol: tcp
+              FromPort: 6443
+              ToPort: 6443
+              CidrIp: "10.0.0.0/16"  
+              Description: "Access to Kubernetes API server within the VPC only"
+          # Access to etcd server API (used by kube-apiserver & etcd) within the VPC only 
+            - IpProtocol: tcp
+              FromPort: 2379
+              ToPort: 2380
+              CidrIp: "10.0.0.0/16"
+              Description: "Access to etcd server API (used by kube-apiserver & etcd) within the VPC only"
+          # Access to kubelet API within the VPC only 
+            - IpProtocol: tcp
+              FromPort: 10250
+              ToPort: 10250
+              CidrIp: "10.0.0.0/16"
+              Description: "Access to kubelet API within the VPC only"
+          # Access to kube-scheduler within the VPC only 
+            - IpProtocol: tcp
+              FromPort: 10259
+              ToPort: 10259
+              CidrIp: "10.0.0.0/16"
+              Description: "Access to kube-scheduler within the VPC only"
+          # Access to kube-controller-manager within the VPC only 
+            - IpProtocol: tcp
+              FromPort: 10257
+              ToPort: 10257
+              CidrIp: "10.0.0.0/16"   
+              Description: "Access to kube-controller-manager within the VPC only"           
+  
+    DataPlaneSG:
+        Type: AWS::EC2::SecurityGroup
         Properties:
-            IpProtocol: tcp
-            FromPort: 2049
-            ToPort: 2049
-            SourceSecurityGroupId:
-              Fn::GetAtt:
-                - TrimDicePublicSG
-                - GroupId
-            GroupId:
-              Fn::GetAtt:
-                - TrimDicePublicSG
-                - GroupId
-              
+          VpcId:
+            Ref: TrimDiceVPC
+          GroupName: DataPlaneSG
+          GroupDescription: "Security group for Data Plane (Worker nodes) to associate with TrimDicePublicSubnet"
+          SecurityGroupEgress:
+            - IpProtocol: -1
+              CidrIp: "0.0.0.0/0"
+          SecurityGroupIngress:
+          # Standard SSH login access:
+            - IpProtocol: tcp
+              FromPort: 22
+              ToPort: 22
+              CidrIp: "0.0.0.0/0"
+              Description: "Standard SSH login access"
+          # Ping access:
+            - IpProtocol: icmp
+              FromPort: 8
+              ToPort: -1
+              CidrIp: "0.0.0.0/0"
+              Description: "Ping access"
+          # Access to kubelet API within the VPC only 
+            - IpProtocol: tcp
+              FromPort: 10250
+              ToPort: 10250
+              CidrIp: "10.0.0.0/16"
+              Description: "Access to kubelet API within the VPC only"
+          # Access to kube-proxy within the VPC only 
+            - IpProtocol: tcp
+              FromPort: 10256
+              ToPort: 10256
+              CidrIp: "10.0.0.0/16"
+              Description: "Access to kube-proxy within the VPC only"
+          # Access to NodePort Services standard ports within the VPC only 
+            - IpProtocol: tcp
+              FromPort: 30000
+              ToPort: 32767
+              CidrIp: "10.0.0.0/16"  
+              Description: "Access to NodePort Services standard ports within the VPC only"            
+          # Access to NodePort Services standard ports within the VPC only 
+            - IpProtocol: udp
+              FromPort: 30000
+              ToPort: 32767
+              CidrIp: "10.0.0.0/16"  
+              Description: "Access to NodePort Services standard ports within the VPC only"            
 
     # Attached Internet gateway for Internet access
     TDIGW:
@@ -112,8 +177,13 @@ Outputs:
       Ref: TrimDicePublicSubnet
     Export:
       Name: TrimDice-SubnetId 
-  SGId:
+  ControlPlaneSGId:
     Value:
-      Ref: TrimDicePublicSG
+      Ref: ControlPlaneSG
     Export:
-      Name: TrimDice-SGId
+      Name: ControlPlaneSGId
+  DataPlaneSGId:
+    Value:
+      Ref: DataPlaneSG
+    Export:
+      Name: DataPlaneSGId
