@@ -23,14 +23,17 @@
     - `kubelet`, by default, is designed to crash when trying to start on a node with swap memory enabled.
     - swap memory should either be tolerated by kubelet (using `failSwapOn:false`) or should be disabled permanently. 
     - Additionally, it comes down to a design choice to adhere to Kubernetes principles such as:  
-        **1. Quality of Service (QoS) enforcement.**
-        -   Kubernetes can prioritize pods under resources pressure.
-        -   QoS tiers such as "Guaranteed", "Burstable", "BestEffort" -- which are assigned by Kubernetes based on memory and CPU limits.
-        **2. Reliable Scheduling**
-        -   Kubernetes assumes RAM is the only memory resource.
-        -   If swap is enabled, it can overestimate memory. Resulting in overcommitting nodes and causing instability.
+        **1. Quality of Service (QoS) enforcement.**  
+        - Kubernetes can prioritize pods under resources pressure.
+        - QoS tiers such as "Guaranteed", "Burstable", "BestEffort" -- which are assigned by Kubernetes based on memory and CPU limits.  
+        
+        **2. Reliable Scheduling**  
+        - Kubernetes assumes RAM is the only memory resource.
+        - If swap is enabled, it can overestimate memory. Resulting in overcommitting nodes and causing instability.  
+        
         **3. Performance isolation**
-        -   In a multi-tenant cluster environment, one pod using swap memory can slow down others.
+        - In a multi-tenant cluster environment, one pod using swap memory can slow down others.  
+       
         **4. Fail-Fast Behaviour**
         -   Kubernetes expects pods to <u>fail</u> when resource limits are exceeded.
         -   This helps to trigger alerts, restarts, autoscaling faster. That is, take action on the issue early on instead of waiting.  
@@ -88,6 +91,7 @@
                 ```   
             - Install it using:
                 ```bash
+                sudo su
                 install -m 755 runc.amd64 /usr/local/sbin/runc
                 ```
         3. Installing CNI plugins

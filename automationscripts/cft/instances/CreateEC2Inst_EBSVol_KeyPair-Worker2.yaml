@@ -1,0 +1,50 @@
+#### Author: Aditya Nambiar
+### Create an EC2 instance with 20GB Hard disk attached (Block Store) & Keypair ###
+### Instance must also have access to Internet ###
+
+
+# Requirements
+# AMI ID: "ami-0f559c3642608c138"
+# Default BlockDeviceMapping : "/dev/xvda"
+# BlockDeviceMapping - Ebs:
+#     - /dev/trimdiceapp
+#     - VolumeType: "io1"
+#     - VolumeSize: 20
+#     - DeleteOnTermination: true
+
+## Note:
+### "!Ref" = Refer another resource 
+
+## Reference command : 
+# ./run_aws_cfm.sh c -t instances/CreateEC2Inst_EBSVol_KeyPair-NoS3.yaml -n k8s-cluster-worker-node1
+
+
+Resources:
+    TrimDiceInstance:
+        Type: AWS::EC2::Instance
+        Properties:
+            ImageId: "ami-0f559c3642608c138"  # same as control node1's AMI as I am providing same ssh key
+            InstanceType: "t2.medium"
+            KeyName: "devops-app-key-01"
+            IamInstanceProfile: ecsInstanceRole  # Existing IAM Instance Profile which was created on the console long back
+            BlockDeviceMappings:
+            - DeviceName: "/dev/sdt"
+              Ebs:
+                VolumeType: "io1"
+                Iops: 200
+                VolumeSize: 20
+                DeleteOnTermination: true
+            NetworkInterfaces:
+            - AssociatePublicIpAddress: true   ## As of Mar 2026, Public address can only be assigned via CloudFormation script if DeviceIndex = 0 & we are creating a new Network interface (VPC and PublicSubnet)
+              DeviceIndex: "0"
+              GroupSet:
+              - Fn::ImportValue: DataPlaneSGId
+              SubnetId:
+                Fn::ImportValue: TrimDice-SubnetId
+            Tags:
+            - Key: Name
+              Value:
+                Fn::Sub: "${AWS::StackName}"
+
+
+      
