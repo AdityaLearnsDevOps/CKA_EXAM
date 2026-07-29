@@ -23,7 +23,7 @@ Resources:
     TrimDiceInstance:
         Type: AWS::EC2::Instance
         Properties:
-            ImageId: "ami-0f559c3642608c138"  # same as control node1's AMI as I am providing same ssh key
+            ImageId: "ami-0d84c31c044ee99d6"  # same as control node1's AMI as I am providing same ssh key
             InstanceType: "t2.medium"
             KeyName: "devops-app-key-01"
             IamInstanceProfile: ecsInstanceRole  # Existing IAM Instance Profile which was created on the console long back

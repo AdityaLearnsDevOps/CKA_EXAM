@@ -114,3 +114,17 @@
         containerd config default > /etc/containerd/config.toml
 4. Install `kubeadm`, `kubelet` and `kubectl`:
     - Run `./install-kube-utils.sh` as normal user.
+
+
+## Node setup:
+### Objectives
+1. Install a single control-plane Kubernetes cluster
+2. Install a Pod network on the cluster so that your Pods can talk to each other
+
+**Install a single control-plane Kubernetes cluster**  
+
+**Initializing control-plane node**
+
+**Install a Pod network on the cluster so that your Pods can talk to each other**
+
+- 
