@@ -1,4 +1,5 @@
 import boto3
+import time
 
 def lambda_handler(event, context):
     print("event: " , event)
@@ -33,6 +34,8 @@ def lambda_handler(event, context):
         print("vol.attachments.Device: ", vol.attachments[0]['Device'])
         if (vol.attachments[0]['Device'] == root_device_name):
             vol_id = vol.id
+            vol_size = vol.size
+            vol_volume_type = vol.volume_type
             print("vol_id: ", vol_id)
             break
      
@@ -49,37 +52,38 @@ def lambda_handler(event, context):
                         'Key': 'Name',
                         'Value': 'cka_exam_clust_ami_'+inst_name_main,
                     },
+                    {
+                        'Key': 'InstanceArch',
+                        'Value': arch
+                    },
+                    {
+                        'Key': 'InstanceID',
+                        'Value': inst_id
+                    },
+                    {
+                        'Key': 'InstanceVirtType',
+                        'Value': virt_type
+                    },
+                    {
+                        'Key': 'InstanceRootDeviceName',
+                        'Value': root_device_name
+                    },
+                    {
+                        'Key': 'InstanceVolumeId',
+                        'Value': vol_id
+                    },
+                    {
+                        'Key': 'InstanceVolSize',
+                        'Value': vol_size
+                    },
+                    {
+                        'Key': 'InstanceVolType',
+                        'Value': vol_volume_type
+                    }
                 ]
             },
         ],
         DryRun=False
     )
-
-    # Wait for snapshot to complete: 
-    snapshot.wait_until_completed()
-
-    # Create AMI from the snapshot:
-    ## https://docs.aws.amazon.com/boto3/latest/reference/services/ec2/client/register_image.html  
-    ami_resp = ec2_resource.register_image(
-        Name='cka_exam_cluster_node_ami_'+inst_name_main,
-        Architecture=arch,
-        VirtualizationType=virt_type,
-        RootDeviceName=root_device_name,
-        BlockDeviceMappings=[
-            {
-                'DeviceName': root_device_name,
-                'Ebs': {
-                    'SnapshotId': snapshot.id,
-                    'VolumeSize': vol.size,
-                    'VolumeType': vol.volume_type,
-                    'DeleteOnTermination': True
-                }
-            },
-        ],
-        DryRun=False
-    )
-
-    print(f"AMI creation now started. AMI ID: {ami_resp.image_id} ")
-    
 
     

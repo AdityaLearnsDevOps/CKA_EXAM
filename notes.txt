@@ -30,3 +30,6 @@ To destroy resources :
     ./run_aws_cfm.sh d -n k8s-clust-net
 
 
+# Additional opensource References:
+1. For kubeadm cluster setup, well-defined shell scripts:
+- https://github.com/techiescamp/kubeadm-scripts/tree/9cece5cdb321e7402413c912f775e0845d2b52ed/scripts

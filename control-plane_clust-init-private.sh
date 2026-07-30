@@ -1,3 +1,11 @@
+#!/bin/bash 
+
+# Ask user to run this script as non-root user:
+
+if [  "$EUID" -eq "0" ]; then
+    echo "Run the script as a non-root user!"
+    exit 1;
+fi
 
 ## Search for default interface on the machine
 DEFAULT_ETH_INTERFACE=$(ip route show | awk '/default / {print $5}')
@@ -30,7 +38,7 @@ sudo sysctl --system
 
 ## Configure kubeconfig:
 
-mkdir -p $HOME/.kube/config
+mkdir -p $HOME/.kube/
 
 # Run kubeadm init with high verbose output:
 sudo kubeadm init \
@@ -39,22 +47,22 @@ sudo kubeadm init \
     --pod-network-cidr="$POD_NET_CIDR"
 
     
-sleep 200 
+sleep 5s
 
 
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+sudo chown -R $(id -u):$(id -g) $HOME/.kube/config
+
 
 ############# CNI Plugin for POD NETWORK INSTALL ############
 
 ## APNAMBIA: recheck whether below commands worked 
 ### Would need to rerun below again:
 
-export KUBECONFIG="/etc/kubernetes/admin.conf"
 kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.32.1/manifests/v1_crd_projectcalico_org.yaml
 kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.32.1/manifests/tigera-operator.yaml
 
-sleep 200
+sleep 5s
 
 # Below URL received when we want to customize Calico install (click on 'iptables' on the website installation guide)
 # Downlaod custom-resources.yaml
