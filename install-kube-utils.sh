@@ -18,7 +18,7 @@ curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSIO
 
 #APNAMBIA: 
 ## Adding a string replace to remove the "/" forward slash before kubelet which caused it to crash on service startup
-sudo sed -i 's/ExecStart=\//ExecStart=/' 10-kubeadm.conf
+sudo sed -i 's/ExecStart=\//ExecStart=/' /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 ## install kubectl:
 
