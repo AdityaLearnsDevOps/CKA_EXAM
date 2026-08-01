@@ -121,10 +121,51 @@
 1. Install a single control-plane Kubernetes cluster
 2. Install a Pod network on the cluster so that your Pods can talk to each other
 
-**Install a single control-plane Kubernetes cluster**  
+**Install a single control-plane, worker-node Kubernetes cluster**  
+
+- We need to install the following tools on each of the nodes participating in the cluster.
+    - `kubeadm`
+        - The primary tool to initialize the control plane.
+        - This tool sets up the required components of the control plane
+            - coredns
+                - Cluster's internal DNS Server.
+                - This is how kubernetes is able to resolve all Services' DNS during internal pod communication.
+            - etcd
+            - kube-apiserver
+            - kube-controller-manager
+            - kube-scheduler
+        - `kubeadm init` : Command used to initialize the control plane.
+            - What does initialization do?
+                1. Runs the preflight checks such as:
+                    -   `swap` is off, ports free, ip_forward=1
+                2. Generates the certificates / pki for API server, etcd etc. in `/etc/kubernetes/pki` directory
+                3. Generates kubeconfig files (e.g. `admin.conf`, `kubelet.conf`)
+                4. Starts etcd, kube-controller-manager, kube-apiserver, kube-scheduler
+                5. Sets up RBAC, bootstraps token for `kubeadm join` command
+                6. Deploy CoreDNS + kube-proxy on worker nodes (as a Deployment/DaemonSet, once CNI plugin is installed on each node)
+        - `kubeadm join` : Command used to join worker nodes to the control node. Just kubelet + node registration.
+            - What does the join command do?
+                1. Runs preflight checks
+                2. Contacts the API server (using the provided join token -> `--token` + CA cert hash -> `--discovery-token-ca-cert-hash`)
+                3. Downloads the cluster info (CA cert, etc.) from control plane.
+                4. Generates the worker node's own kubeconfig (in `$HOME/.kube/config` - config is the file not directory)
+                5. Starts the `kubelet` service which will register _this_ worker node with the API Server. 
+                    -  When we run `kubectl get nodes`, it will show the worker node as `NotReady` (until CNI plumbs it)
+                
+    - `kubelet`
+        - This is a service attached to each node in the cluster
+        - It helps in establishing communication with the kube-apiserver
+    - `kubectl`   
+        - This is a utility tool to get details about the cluster & containers running in it. 
 
 **Initializing control-plane node**
+- Check the commands and steps in :
+    1. Run `install-kube-utils.sh`
+    2. Run `control-plane_clust-init-private.sh`.
 
 **Install a Pod network on the cluster so that your Pods can talk to each other**
-
+- Setup the CNI Plugin (in our case, we are using 'Calico') on the worker node.
+    - Follow steps in `worker-plane_clust-init-private.sh`
+- Setup kubelet service to autostart.
+    - Given in `install-kube-utils.sh` 
 - 

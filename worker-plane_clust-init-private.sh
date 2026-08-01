@@ -40,16 +40,6 @@ sudo sysctl --system
 
 mkdir -p $HOME/.kube/
 
-# Run kubeadm init with high verbose output:
-sudo kubeadm init \
-    --v=5 \
-    --apiserver-advertise-address="$APISERV_ADVERTISE_ADDR" \
-    --pod-network-cidr="$POD_NET_CIDR"
-
-    
-sleep 5s
-
-
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown -R $(id -u):$(id -g) $HOME/.kube/config
 
