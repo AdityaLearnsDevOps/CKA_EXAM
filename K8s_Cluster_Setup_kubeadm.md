@@ -168,4 +168,47 @@
     - Follow steps in `worker-plane_clust-init-private.sh`
 - Setup kubelet service to autostart.
     - Given in `install-kube-utils.sh` 
-- 
+
+### Upgrading Kubernetes cluster:
+
+As we have used `kubeadm` utility to setup our cluster - 
+There are subcommands provided in `kubeadm` when Administrator decides to upgrade the Kubernetes version of cluster:
+1. `kubeadm upgrade plan`
+    - Checks the current version of Kubernetes against the latest available one in the repository.
+    - It validates whether cluster is eligible for an upgrade. 
+2. `kubeadm upgrade apply`
+    - This is the primary command used to upgrade.
+    - Upgrades the first control plane node of the cluster to specified version
+3. `kubeadm upgrade diff`
+    - Works like a preview, similar to `kubeadm upgrade apply --dry-run`.
+    - It shows the configuration changes that would apply, without actually applying the changes on cluster.
+4. `kubeadm upgrade node`
+    - Updates the local kubelet configuration on the worker nodes or secondary control plane nodes.
+    - It triggers necessary upgrade steps specific to that node.
+
+#### Upgrade workflow:
+
+Step 1.  
+Update system software (e.g. `apt-get update`) & Kubernetes packages from your distribution or repository.  
+
+Step 2.  
+Check the current version of Kubernetes in your cluster
+
+Step 3.  
+Drain the control plane so that it evicts all running pods.
+
+Step 4.  
+Review the planned upgrade.
+
+Step 5.  
+Apply the upgrade on the primary control plane node.
+
+Step 6.  
+Uncordon the control plane node to resume pod scheduling.
+
+Step 7.  
+Repeat the above steps on all secondary control plane nodes & worker nodes, followed by a `kubelet` restart.
+
+
+*BEST PRACTISE*
+- Always upgrade one control plane node at a time, confirm stability and then proceed to upgrade other nodes.
