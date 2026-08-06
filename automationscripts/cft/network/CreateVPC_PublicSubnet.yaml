@@ -44,6 +44,12 @@ Resources:
               ToPort: -1
               CidrIp: "0.0.0.0/0"
               Description: "Ping Access"
+          # Web app access:
+            - IpProtocol: tcp
+              FromPort: 80
+              ToPort: 80
+              CidrIp: "0.0.0.0/0"
+              Description: "Standard Web app Access"
           # Access to Kubernetes API server within the VPC only 
             - IpProtocol: tcp
               FromPort: 6443
