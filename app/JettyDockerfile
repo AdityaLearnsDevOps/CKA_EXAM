@@ -1,0 +1,26 @@
+### 
+# IMPROMPTU RUNBOOK:
+# 1. Run the java-webapp using Maven build tool in jetty appserver
+# Command: 
+#     mvn "org.eclipse.jetty:jetty-maven-plugin:11.0.15:run" "-pl" "webapp" "-am" "-Djetty.port=8080"
+###
+
+FROM maven:3.9.16-eclipse-temurin-17-alpine
+
+# Set a working dir
+WORKDIR /usr/java-webapp
+
+# Copy the artifacts into image.
+## Copy the lib1, lib2, webapp project into image:
+COPY ./java-webapp/webapp ./webapp
+COPY ./java-webapp/lib1 ./lib1
+COPY ./java-webapp/lib2 ./lib2
+
+## Copy pom.xml for maven:
+COPY ./java-webapp/pom.xml ./
+
+## Expose the port of 8080 to test application:
+EXPOSE 8080 
+
+# Maven command to execute 'run' goal: 
+CMD [ "mvn", "org.eclipse.jetty:jetty-maven-plugin:11.0.15:run", "-pl", "webapp", "-am", "-Djetty.port=8080" ]
