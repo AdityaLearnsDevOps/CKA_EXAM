@@ -1,0 +1,16 @@
+  - name: Update the Linux repositories
+    ansible.builtin.dnf:
+      name: dnf
+      state: latest
+      update_only: true 
+  - name: Install Docker CE and utilties
+    ansible.builtin.dnf:
+      name: docker
+      state: present
+  - name: Enable docker in systemctl, make it autostart on bootup and start the service
+    ansible.builtin.systemd_service:
+      name: docker.service
+      enabled: true
+      state: started
+
+

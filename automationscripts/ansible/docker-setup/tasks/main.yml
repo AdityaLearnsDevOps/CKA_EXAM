@@ -1,0 +1,8 @@
+---
+- name: Installing docker via dnf on Amazon Linux
+  include_tasks:
+    file: install-docker-pb.yaml
+
+- name: Allow docker command to be run as non-root 
+  include_tasks:
+    file: allow-docker-nonroot.yaml 

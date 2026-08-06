@@ -1,0 +1,7 @@
+
+ - name: Add ec2-user for Amazon Linux in docker group
+   ansible.builtin.user: 
+    name: ec2-user
+    append: true
+    groups: docker
+
