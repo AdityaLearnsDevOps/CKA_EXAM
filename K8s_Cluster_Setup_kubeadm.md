@@ -10,9 +10,13 @@
 	- This is required for IP-Per-Pod networking model (basically to achieve the objective of having an IP for each Pod)
 	
 3. Setting up Cluster Worker Nodes (or Secondary Control Nodes):
-	- Run below command to join each secondary nodes (control / worker):
-		kubeadm join
-		(provide the token & hash received during the 'kubeadm init' command)
+	- Run below command to join each secondary nodes (control / worker):  
+		`kubeadm join`  
+		(provide the token & hash received during the `kubeadm init` command)
+    - If we don't capture the command from `kubeadm init` output, we can get the same join command by running below:  
+    ```bash
+    kubeadm token create --print-join-command
+    ```
 
 ## `kubeadm` requirements:
 
@@ -22,10 +26,10 @@
 2. Swap memory should be disabled permanently on all nodes.
     - `kubelet`, by default, is designed to crash when trying to start on a node with swap memory enabled.
     - swap memory should either be tolerated by kubelet (using `failSwapOn:false`) or should be disabled permanently. 
-    - Additionally, it comes down to a design choice to adhere to Kubernetes principles such as:  
+    - Additionally, doing this basically comes down to a design choice which adhere to Kubernetes principles such as:  
         **1. Quality of Service (QoS) enforcement.**  
-        - Kubernetes can prioritize pods under resources pressure.
-        - QoS tiers such as "Guaranteed", "Burstable", "BestEffort" -- which are assigned by Kubernetes based on memory and CPU limits.  
+        - QoS tiers such as "_Guaranteed_", "_Burstable_", "_BestEffort_" -- which are assigned by Kubernetes to Pods, based on memory and CPU limits.  
+        - These tiers help Kubernetes prioritize pods under resource pressure.
         
         **2. Reliable Scheduling**  
         - Kubernetes assumes RAM is the only memory resource.
