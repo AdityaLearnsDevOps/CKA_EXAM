@@ -5,3 +5,6 @@
     append: true
     groups: docker
 
+# Need to logout & login after adding user to group (above code is analogous to 'usermod', so need to relogin to shell)
+
+

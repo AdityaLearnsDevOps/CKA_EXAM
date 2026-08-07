@@ -6,3 +6,7 @@
 - name: Allow docker command to be run as non-root 
   include_tasks:
     file: allow-docker-nonroot.yaml 
+
+- name: Test ec2-user is in docker group
+  include_tasks:
+    file: ../tests/allow-docker-nonroot_test.yml

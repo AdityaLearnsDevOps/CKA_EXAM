@@ -1,0 +1,17 @@
+---
+- name: Fetch details of docker group from getent database
+  ansible.builtin.getent:
+    database: group
+    key: docker
+  register: docker_group_info
+
+- name: Debug docker group info
+  debug:
+    var: docker_group_info 
+    
+- name: Test if ec2-user is part of docker group
+  ansible.builtin.assert:
+    that:
+      - "'ec2-user' in docker_group_info.ansible_facts.getent_group.docker[2].split(',')"
+    fail_msg: "User 'ec2-user' is not in the docker group"
+    success_msg: "User 'ec2-user' is in docker group"
