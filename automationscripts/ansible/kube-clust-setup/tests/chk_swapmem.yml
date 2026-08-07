@@ -1,0 +1,7 @@
+---
+- name: Check if swap memory is disabled
+  assert: 
+    that: # the below condition should be true for success
+      - ansible_swaptotal_mb != '0'     ## The single quote around zero is required.
+    fail_msg: "Swap memory is still enabled"
+    success_msg: "Swap memory is disabled"

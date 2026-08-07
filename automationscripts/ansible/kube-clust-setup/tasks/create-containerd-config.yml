@@ -1,0 +1,8 @@
+# tasks file for kube-clust-setup
+- name: Create /etc/containerd directory
+  ansible.builtin.file:
+    path: /etc/containerd
+    state: directory
+
+- name: Generate config.toml
+  ansible.builtin.shell: containerd config default > /etc/containerd/config.toml

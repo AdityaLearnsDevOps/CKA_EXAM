@@ -1,0 +1,8 @@
+# tasks file for kube-clust-setup
+- name: Download the containerd tarball
+  ansible.builtin.get_url:
+    url: https://github.com/opencontainers/runc/releases/download/v1.5.1/runc.amd64
+    dest: /tmp/
+
+- name: Install runc
+  command: install -m 755 /tmp/runc.amd64 /usr/local/sbin/runc

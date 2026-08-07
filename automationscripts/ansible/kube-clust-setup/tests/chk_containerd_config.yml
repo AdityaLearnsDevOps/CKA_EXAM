@@ -1,0 +1,21 @@
+## SubTask 1
+- name: Check if file exists
+  ansible.builtin.stat:
+    path: /etc/containerd/config.toml
+  register: stat_op
+
+- name: Warn if file does not exists
+  ansible.builtin.fail:
+    msg: "config.toml was not created"
+  when: not stat_op.stat.exists
+
+## SubTask 2 
+- name: Check if config.toml is empty
+  ansible.builtin.stat:
+    path: /etc/containerd/config.toml
+  register: config_toml_content
+
+- name: Warn if file is empty
+  ansible.builtin.fail:
+    msg: "config.toml is empty"
+  when: config_toml_content.stat.exists and config_toml_content.stat.size == '0'

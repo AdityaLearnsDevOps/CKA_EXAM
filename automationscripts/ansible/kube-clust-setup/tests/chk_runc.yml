@@ -1,0 +1,13 @@
+---
+- name: Check if runc is available
+  command: command -v runc
+  register: runc_output
+  failed_when: false  # Prevent the play from aborting the execution if return-code is non-zero
+  changed_when: false # Prevent showing false-positive of "changed" value, since we are only checking whether command exists in $PATH 
+
+- name: Show message if runc is not available
+  assert:
+    that:
+      - runc_output.rc == 0
+    fail_msg: "runc command is not part of the $PATH variable"
+    success_msg: "Found runc command in $PATH" 

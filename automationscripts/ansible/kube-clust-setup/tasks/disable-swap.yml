@@ -1,0 +1,13 @@
+# tasks file for kube-clust-setup
+- name: Disable swap memory on the instance temporarily
+  become: true
+  command: swapoff -a
+    
+  
+- name: Disable swap memory on the instance permanently, persists reboots
+  become: true
+  replace:
+    path: /etc/fstab
+    regexp: '^(\s*)([^#\n]+\s+)(\w+\s+)swap(\s+.*)$'
+    replace: '#\1\2\3swap\4'
+    backup: yes

@@ -1,0 +1,10 @@
+---
+  - name: Execute kube-clust-setup role
+    hosts:
+      - cpnodes
+      - workers
+    become: true # Run as sudo
+
+    roles:
+      - kube-clust-setup
+

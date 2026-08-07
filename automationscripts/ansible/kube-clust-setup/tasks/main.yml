@@ -1,0 +1,50 @@
+# tasks file for kube-clust-setup
+
+## Step: Swap memory disable 
+- name: Disable swap memory 
+  include_tasks:
+    file: disable-swap.yml
+
+- name: Check if swap memory is disabled
+  include_tasks:
+    file: ../tests/chk_swapmem.yml
+
+## Step: Install containerd High level Container runtime
+- name: Install containerd service
+  include_tasks:
+    file: install-containerd.yml
+  
+# Commenting test until I find a better alternative to checking return code
+# - name: Check if containerd command is available in $PATH
+#   include_tasks:
+#     file: ../tests/chk_containerd.yml
+
+## Step:  Install runc Low level Container runtime
+- name: Install runc service
+  include_tasks:
+    file: install-runc.yml
+  
+- name: Check if runc command is available in $PATH
+  include_tasks:
+    file: ../tests/chk_runc.yml
+
+## Step: Install CNI Plugin
+- name: Install Container Network Interface (CNI) Plugin
+  include_tasks:
+    file: install-cni-plugin.yml
+
+
+## Step: Create containerd config.toml file
+- name: Generate containerd config.toml file
+  include_tasks:
+    file: create-containerd-config.yml
+
+- name: Check if containerd config.toml was created properly
+  include_tasks:
+    file: ../tests/chk_containerd_config.yml
+
+## Final Step: Install kubeadm, kubelet and kubectl
+
+- name: Install kubeadm, kubelet and kubectl
+  include_tasks:
+    file: install-kube-utils.yml
