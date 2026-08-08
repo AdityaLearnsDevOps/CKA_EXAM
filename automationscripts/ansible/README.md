@@ -30,6 +30,10 @@ Master node:
     ```bash
     scp -r playbooks k8sclustinst:/home/ec2-user/
     ```
+- Remember to transfer your shell scripts and place them in `<ansible_role>/files`
+    ```bash
+    scp -r ../../cni-plugins-network-install.sh ../../control-plane_clust-init-private.sh k8sclustinst:/home/ec2-user
+    ```
 
 To run the docker-setup role:
 --  
@@ -40,5 +44,7 @@ ansible-playbook -i inventory.ini playbooks/docker-setup-run.yml
 To run the kube-clust-setup role:
 --  
 ```bash
-ansible-playbook -i inventory.ini playbooks/kube-clust-cp-setup.yml
+ansible-playbook -i inventory.ini playbooks/kube-clust-setup-run.yaml --skip-tags "node-setup,node-network-setup"
+
+ansible-playbook -i inventory.ini playbooks/kube-clust-setup-run.yaml --tags "node-setup" 
 ```

@@ -1,0 +1,5 @@
+---
+- name: Run the script to execute pre-requisites and initialize the primary control plane
+  become: false    ## Overriding become flag to run script as non-root
+  ansible.builtin.script: control-plane_clust-init-private.sh
+  tags: node-setup

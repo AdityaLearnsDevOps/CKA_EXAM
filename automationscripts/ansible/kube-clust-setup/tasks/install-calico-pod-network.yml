@@ -1,0 +1,8 @@
+---
+- name: Run the script for setting up calico pod network
+  become: false   ## Overriding become flag to run script as non-root
+  ansible.builtin.script: cni-plugins-network-install.sh
+  tags: 
+    - node-setup
+    - node-network-setup
+  
