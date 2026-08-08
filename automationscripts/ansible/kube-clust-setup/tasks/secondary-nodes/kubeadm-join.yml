@@ -1,5 +1,4 @@
 ---
 - name: Join secondary node with the primary control plane node
-  become: false
   ansible.builtin.command: kubeadm join 10.0.0.178:6443 --token pticfq.cyz2nu2osw4z8djk --discovery-token-ca-cert-hash sha256:04976c3be20ba035ddb7b4f4fc878c658506a028c560674340476de8e2f083d8 
   tags: node-network-setup

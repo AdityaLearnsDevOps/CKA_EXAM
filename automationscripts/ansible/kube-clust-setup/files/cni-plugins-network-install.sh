@@ -9,6 +9,15 @@ fi
 
 
 ############# CNI Plugin for POD NETWORK INSTALL ############
+# Set ip_forward = 1 :
+# Why? 
+## Pod traffic gets routed through the node (bridge → node's network stack → other nodes). 
+## Without ip_forward=1, the kernel drops packets not destined for the node itself 
+##   — kills pod-to-pod routing before it even starts.
+
+echo "net.ipv4.ip_forward = 1" | sudo tee -a /etc/sysctl.d/k8s.conf
+sudo sysctl --system
+
 
 ## APNAMBIA: recheck whether below commands worked 
 ### Would need to rerun below again:

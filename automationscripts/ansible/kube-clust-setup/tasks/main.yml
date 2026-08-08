@@ -59,6 +59,14 @@
     file: kubeadm-init.yml
   tags: node-setup
 
+# Install a Pod network on the cluster so that your Pods can talk to each other
+- name: Install a Pod network on the cluster so that your Pods can talk to each other
+  include_tasks:
+    file: install-calico-pod-network.yml
+  tags:
+    - node-setup
+    - node-network-setup
+
 # Run below task to join secondary nodes to the primary control plane node
 ## Debug msg to warn playbook runner about executing below task on secondary nodes.
 
@@ -71,11 +79,16 @@
     file: secondary-nodes/kubeadm-join.yml
   tags: node-network-setup  
 
-# Install a Pod network on the cluster so that your Pods can talk to each other
-- name: Install a Pod network on the cluster so that your Pods can talk to each other
-  include_tasks:
-    file: install-calico-pod-network.yml
-  tags:
-    - node-setup
-    - node-network-setup
 
+
+### Move admin.conf to secondary nodes:
+
+- name: Move admin.conf to secondary node
+  include_tasks: 
+    file: secondary-nodes/move-admin-conf.yml
+  tags: post-setup
+
+- name: Prepare kubeconfig on worker nodes
+  include_tasks:
+    file: secondary-nodes/setup-kubeconfig.yml
+  tags: post-setup

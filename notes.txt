@@ -30,6 +30,11 @@ To destroy resources :
     ./run_aws_cfm.sh d -n k8s-clust-net
 
 
+kubectl commands reference:
+
+1. To get pods which have unhealthy containers but Running (e.g. 1/2 READY)
+- kubectl get pods -o json | jq '.items[] | select(.status.containerStatuses[].ready == false) | .metadata.name'
+
 # Additional opensource References:
 1. For kubeadm cluster setup, well-defined shell scripts:
 - https://github.com/techiescamp/kubeadm-scripts/tree/9cece5cdb321e7402413c912f775e0845d2b52ed/scripts

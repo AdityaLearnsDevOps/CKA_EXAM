@@ -34,7 +34,10 @@ Master node:
     ```bash
     scp -r ../../cni-plugins-network-install.sh ../../control-plane_clust-init-private.sh k8sclustinst:/home/ec2-user
     ```
-
+- For executing commands on remote worker nodes, place the pem file in a suitable location on master node.
+    ```bash
+    scp ../../devops-app-key-01.pem k8sclustinst:/home/ec2-user
+    ```
 To run the docker-setup role:
 --  
 ```bash  
@@ -46,5 +49,12 @@ To run the kube-clust-setup role:
 ```bash
 ansible-playbook -i inventory.ini playbooks/kube-clust-setup-run.yaml --skip-tags "node-setup,node-network-setup"
 
-ansible-playbook -i inventory.ini playbooks/kube-clust-setup-run.yaml --tags "node-setup" 
+ansible-playbook -i inventory.ini -l cpnodes playbooks/kube-clust-setup-run.yaml --tags "node-setup"
+
+ansible-playbook -i inventory.ini -l workers playbooks/kube-clust-setup-run.yaml --tags "node-network-setup"
+```
+
+To move the admin.conf file from primary control node to all worker nodes & setup kubeconfig:
+```bash 
+ansible-playbook -i inventory.ini -l workers playbooks/kube-clust-setup-run.yaml --tags "post-setup"
 ```
