@@ -4,6 +4,7 @@
       - cpnodes
       - workers
     become: true # Run as sudo
+    gather_facts: true
 
     roles:
       - kube-clust-setup

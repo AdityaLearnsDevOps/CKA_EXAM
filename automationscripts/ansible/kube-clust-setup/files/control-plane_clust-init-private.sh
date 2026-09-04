@@ -46,7 +46,10 @@ sudo kubeadm init \
     --apiserver-advertise-address="$APISERV_ADVERTISE_ADDR" \
     --pod-network-cidr="$POD_NET_CIDR"
 
-    
+# Extract the 'kubeadm join' command from the init output. 
+kubeadm_join_cmd=$(kubeadm token create --print-join-command)
+
+echo "kubeadm_join_cmd: \"$kubeadm_join_cmd\"" >> $HOME/kube-clust-setup/vars/main.yml
 sleep 5s
 
 
