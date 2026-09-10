@@ -1,2 +1,3 @@
----
+
 # vars file for kube-clust-setup
+kubeadm_join_cmd: "kubeadm join 192.168.60.11:6443 --token wfagar.8q6ribgeba9lbfnh --discovery-token-ca-cert-hash sha256:71559e50de2cef2601be315b1e81ea826a4a199f00fd2e316876fc512ff5640f" 

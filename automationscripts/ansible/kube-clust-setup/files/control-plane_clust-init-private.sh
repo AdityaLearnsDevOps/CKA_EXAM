@@ -8,10 +8,14 @@ if [  "$EUID" -eq "0" ]; then
 fi
 
 ## Search for default interface on the machine
-DEFAULT_ETH_INTERFACE=$(ip route show | awk '/default / {print $5}')
+DEFAULT_ETH_INTERFACE=$(ip route show to 192.168.60.0/24 | awk '{print $3}')
 
 ## Get the IP address from the default interface on the machine 
 PRIVATE_IP_ADDR=$(ip addr show $DEFAULT_ETH_INTERFACE | awk '/inet / {print $2}' | cut -d/ -f1)
+
+# Forcing Kubelet to use Host-Only IP 
+echo "KUBELET_EXTRA_ARGS=--node-ip=$PRIVATE_IP_ADDR" | sudo tee /etc/default/kubelet
+sudo systemctl restart kubelet
 
 ## To get the Public IP address from within the machine, use:
 # PUBLIC_IP_ADDR=$(curl ifconfig.me)

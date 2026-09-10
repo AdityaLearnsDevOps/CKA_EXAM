@@ -13,6 +13,10 @@
 3. Install ansible:
     ```bash
     sudo yum install ansible -y
+
+    or 
+
+    sudo apt install ansible-core -y
     ```
 ### Ansible setup:
 Master node:
@@ -51,10 +55,18 @@ ansible-playbook -i inventory.ini playbooks/docker-setup-run.yml
 To run the kube-clust-setup role:
 --  
 ```bash
-ansible-playbook -i inventory.ini playbooks/kube-clust-setup-run.yaml --skip-tags "node-setup,node-network-setup"
+ansible-playbook -i inventory.ini playbooks/kube-clust-setup-run.yaml --skip-tags "node-setup,node-network-setup,post-setup"
 
 ansible-playbook -i inventory.ini -l cpnodes playbooks/kube-clust-setup-run.yaml --tags "node-setup"
 
+ansible-playbook -i inventory.ini -l workers playbooks/kube-clust-setup-run.yaml --tags "post-setup"
+```
+
+- Copy output and paste it in vars/main.yml 
+    - if not already there, create new variable - `kubeadm_join_cmd` and then paste the below command output as value to this variable.  
+`kubeadm token create --print-join-command` 
+
+```
 ansible-playbook -i inventory.ini -l workers playbooks/kube-clust-setup-run.yaml --tags "node-network-setup"
 ```
 

@@ -2,3 +2,5 @@
 - name: Run script to setup kubeadm, kubelet, kubectl 
   become: false   ## Override the global 'become' flag as this script is to be run by non-root user
   ansible.builtin.script: install-kube-utils.sh
+  args:
+    executable: /bin/bash   # required to specify shell, as debian is giving false positive

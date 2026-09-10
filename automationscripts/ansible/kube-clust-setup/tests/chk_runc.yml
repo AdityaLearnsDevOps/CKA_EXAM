@@ -1,6 +1,8 @@
 ---
 - name: Check if runc is available
-  command: command -v runc
+  ansible.builtin.shell: command -v runc
+  args:
+    executable: /bin/bash   # required to specify shell, as debian is giving false positive
   register: runc_output
   failed_when: false  # Prevent the play from aborting the execution if return-code is non-zero
   changed_when: false # Prevent showing false-positive of "changed" value, since we are only checking whether command exists in $PATH 

@@ -8,7 +8,17 @@
   run_once: true
   tags: post-setup
 
+- name: Ensure /etc/kubernetes directory exists
+  ansible.builtin.file:
+    path: /etc/kubernetes
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  tags: post-setup
+  
 - name: Move admin.conf from primary node to worker nodes
+  become: true
   ansible.builtin.copy:
     src: /tmp/admin.conf
     dest: /etc/kubernetes/admin.conf
