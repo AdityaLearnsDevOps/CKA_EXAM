@@ -66,7 +66,12 @@ ansible-playbook -i inventory.ini -l workers playbooks/kube-clust-setup-run.yaml
     - if not already there, create new variable - `kubeadm_join_cmd` and then paste the below command output as value to this variable.  
 `kubeadm token create --print-join-command` 
 
+- Also need to set below properties in worker node seperately, as ansible playbook will be run on the CP node.
+```bash
+echo "net.ipv4.ip_forward = 1" | sudo tee -a /etc/sysctl.d/k8s.conf
+sudo sysctl --system
 ```
+```bash
 ansible-playbook -i inventory.ini -l workers playbooks/kube-clust-setup-run.yaml --tags "node-network-setup"
 ```
 
